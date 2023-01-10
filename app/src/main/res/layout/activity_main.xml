@@ -10,7 +10,8 @@
         android:id="@+id/surface_camera_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:onClick="resetiraj" />
 
     <TextView
         android:id="@+id/tv_result"
@@ -18,11 +19,12 @@
         android:layout_height="100dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
+        android:gravity="center"
         android:text=""
+        android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="60sp"
-        android:gravity="center"
-        android:textAlignment="center"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:onClick="resetiraj" />
 
 </RelativeLayout>

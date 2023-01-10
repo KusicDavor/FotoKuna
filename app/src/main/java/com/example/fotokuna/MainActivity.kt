@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.util.SparseArray
 import android.view.SurfaceHolder
+import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -170,5 +171,9 @@ class MainActivity : AppCompatActivity() {
             }
             else -> {}
         }
+    }
+
+    fun resetiraj(view: View) {
+        tv_result.text = "SKENIRAM"
     }
 }
