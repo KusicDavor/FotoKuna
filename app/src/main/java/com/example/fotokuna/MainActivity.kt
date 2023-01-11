@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.util.Log
 import android.util.SparseArray
 import android.view.SurfaceHolder
-import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -17,7 +16,6 @@ import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.text.TextBlock
 import com.google.android.gms.vision.text.TextRecognizer
 import kotlinx.android.synthetic.main.activity_main.*
-import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
@@ -26,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mCameraSource: CameraSource
     private lateinit var textRecognizer: TextRecognizer
     private val tag: String? = "MainActivity"
-    private var string_euro : String = ""
+    private var iznosEuro : Float = 0F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,8 +83,9 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 tv_result.post {
-                    string_euro = prepoznajEure(items)
-                    kunski_iznos = pretvoriUKunu(string_euro)
+                    //iznosEuro = prepoznajEure(items)
+                    //kunski_iznos = pretvoriUKunu(iznosEuro)
+                    kunski_iznos = prepoznajEure(items)
                 }
                     if (postojiTekst() == false) {
                         tv_result.text = kunski_iznos
@@ -116,17 +115,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun prepoznajEure(items: SparseArray<TextBlock>): String {
-        var cijena : String = ""
+        var iznosEuro : Float = 0F
+        var string : String = ""
+        var ca : CharArray= charArrayOf()
         for (i in 0 until items.size()) {
             val item = items.valueAt(i).value
             if (item.contains("€")) {
-                cijena += item.substringBefore("€")
+                string = item.substringBefore("€")
+                ca = string.toCharArray()
+                string = ""
+                for (c : Char in ca) {
+                    if (c.toString() == "," || c.isDigit() || c.toString() == ".") {
+                        string += c
+                    }
+                }
                 break
-            } else {
-                continue
             }
         }
-        return cijena
+        return string
     }
 
     private fun requestforPermission() {
@@ -171,9 +177,5 @@ class MainActivity : AppCompatActivity() {
             }
             else -> {}
         }
-    }
-
-    fun resetiraj(view: View) {
-        tv_result.text = "SKENIRAM"
     }
 }
