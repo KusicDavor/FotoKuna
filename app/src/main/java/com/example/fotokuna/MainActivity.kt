@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mCameraSource: CameraSource
     private lateinit var textRecognizer: TextRecognizer
     private val tag: String? = "MainActivity"
-    private var iznosEuro : Float = 0F
+    private var iznosEuro : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,9 +83,8 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 tv_result.post {
-                    //iznosEuro = prepoznajEure(items)
-                    //kunski_iznos = pretvoriUKunu(iznosEuro)
-                    kunski_iznos = prepoznajEure(items)
+                    iznosEuro = prepoznajEure(items)
+                    kunski_iznos = pretvoriUKunu(iznosEuro)
                 }
                     if (postojiTekst() == false) {
                         tv_result.text = kunski_iznos
@@ -115,13 +114,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun prepoznajEure(items: SparseArray<TextBlock>): String {
-        var iznosEuro : Float = 0F
         var string : String = ""
         var ca : CharArray= charArrayOf()
         for (i in 0 until items.size()) {
             val item = items.valueAt(i).value
             if (item.contains("€")) {
-                string = item.substringBefore("€")
+                string += item.substringBefore("€")
                 ca = string.toCharArray()
                 string = ""
                 for (c : Char in ca) {
