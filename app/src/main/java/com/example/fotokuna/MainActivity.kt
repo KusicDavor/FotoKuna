@@ -3,20 +3,23 @@ package com.example.fotokuna
 import android.Manifest.permission.CAMERA
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.SparseArray
 import android.view.SurfaceHolder
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.text.isDigitsOnly
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.text.TextBlock
 import com.google.android.gms.vision.text.TextRecognizer
 import kotlinx.android.synthetic.main.activity_main.*
+import java.text.NumberFormat
+import java.util.*
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
@@ -25,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mCameraSource: CameraSource
     private lateinit var textRecognizer: TextRecognizer
     private val tag: String? = "MainActivity"
-    private var iznosEuro: String = ""
+    private lateinit var iznosEuro: String
     private var postoji = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,13 +104,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun pretvoriUKunu(stringEuro: String): String {
-        var kuna: Int
-        var greska: String = "SKENIRAM"
+        var kuna : Int
+        val nf = NumberFormat.getInstance(Locale.getDefault())
+
         try {
             kuna = (stringEuro.toFloat() * 7.53450).roundToInt()
             return "$kuna KN"
-        } catch (e: NumberFormatException) {
-            return greska
+        } catch (e: Exception) {
+            //kuna = greska.parse("155,70").toDouble().roundToInt()
+            //return kuna.toString()
+
+            //return nf.parse("488,89").toString()
+            return stringEuro.replace("","-")
         }
     }
 
@@ -121,7 +129,7 @@ class MainActivity : AppCompatActivity() {
                 ca = string.toCharArray()
                 string = ""
                 for (c: Char in ca) {
-                    if (c.toString() == "," || c.isDigit() || c.toString() == ".") {
+                    if (c.toString() == "," || c.toString() == "." || c.toString().isDigitsOnly()) {
                         string += c
                     }
                 }
