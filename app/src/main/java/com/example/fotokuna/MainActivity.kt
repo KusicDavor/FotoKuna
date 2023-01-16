@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.util.SparseArray
 import android.view.SurfaceHolder
+import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -24,7 +25,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mCameraSource: CameraSource
     private lateinit var textRecognizer: TextRecognizer
     private val tag: String? = "MainActivity"
-    private var iznosEuro : String = ""
+    private var iznosEuro: String = ""
+    private var postoji = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
         textRecognizer.setProcessor(object : Detector.Processor<TextBlock> {
             override fun release() {}
-            var kunski_iznos : String = ""
+            var kunski_iznos: String = ""
 
             override fun receiveDetections(detections: Detector.Detections<TextBlock>) {
                 val items = detections.detectedItems
@@ -85,44 +87,40 @@ class MainActivity : AppCompatActivity() {
                 tv_result.post {
                     iznosEuro = prepoznajEure(items)
                     kunski_iznos = pretvoriUKunu(iznosEuro)
-                }
-                    if (postojiTekst() == false) {
-                        tv_result.text = kunski_iznos
-                    }
+                    postoji(kunski_iznos)
                 }
             }
+        }
         )
     }
 
-    private fun postojiTekst() : Boolean {
-        var postoji = false
-        if (tv_result.text != "SKENIRAM" && tv_result.text != "") {
-            postoji = true
+    private fun postoji(kunski_iznos : String) {
+        if (iznosEuro != "" && tv_result.text == "SKENIRAM") {
+            tv_result.text = iznosEuro + "€" + "\n" + kunski_iznos
         }
-        return postoji
     }
 
     private fun pretvoriUKunu(stringEuro: String): String {
-        var kuna : Int
-        var greska : String = "SKENIRAM"
+        var kuna: Int
+        var greska: String = "SKENIRAM"
         try {
             kuna = (stringEuro.toFloat() * 7.53450).roundToInt()
-            return kuna.toString() + " KN"
-        } catch (e : NumberFormatException) {
-           return greska
+            return "$kuna KN"
+        } catch (e: NumberFormatException) {
+            return greska
         }
     }
 
     private fun prepoznajEure(items: SparseArray<TextBlock>): String {
-        var string : String = ""
-        var ca : CharArray= charArrayOf()
+        var string: String = ""
+        var ca: CharArray = charArrayOf()
         for (i in 0 until items.size()) {
             val item = items.valueAt(i).value
-            if (item.contains("€")) {
+            if (item.contains("€") || item.contains("EUR")) {
                 string += item.substringBefore("€")
                 ca = string.toCharArray()
                 string = ""
-                for (c : Char in ca) {
+                for (c: Char in ca) {
                     if (c.toString() == "," || c.isDigit() || c.toString() == ".") {
                         string += c
                     }
@@ -174,6 +172,13 @@ class MainActivity : AppCompatActivity() {
                 return
             }
             else -> {}
+        }
+    }
+
+    fun resetiraj(view: View) {
+        tv_result.post{
+            postoji == false
+            tv_result.text = "SKENIRAM"
         }
     }
 }
