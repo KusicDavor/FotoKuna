@@ -18,6 +18,7 @@ import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.text.TextBlock
 import com.google.android.gms.vision.text.TextRecognizer
 import kotlinx.android.synthetic.main.activity_main.*
+import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 import kotlin.math.roundToInt
@@ -107,22 +108,18 @@ class MainActivity : AppCompatActivity() {
     private fun pretvoriUKunu(stringEuro: String): String {
         var kuna : Int
         val nf = NumberFormat.getInstance(Locale.getDefault())
-
+        val dec = DecimalFormat("#,###.##")
         try {
             kuna = ((nf.parse(stringEuro).toDouble() * 7.53450).toInt())
-            return "$kuna KN"
+            return dec.format(kuna) + " KN"
         } catch (e: Exception) {
-            //kuna = greska.parse("155,70").toDouble().roundToInt()
-            //return kuna.toString()
-
-            //return nf.parse("488,89").toString()
-            return "pogreška u konverziji\npokušaj ponovno"
+            return "pogreška u konverziji"
         }
     }
 
     private fun prepoznajEure(items: SparseArray<TextBlock>): String {
-        var string: String = ""
-        var ca: CharArray = charArrayOf()
+        var string = ""
+        var ca: CharArray
         for (i in 0 until items.size()) {
             val item = items.valueAt(i).value
             if (item.contains("€") || item.contains("EUR")) {
