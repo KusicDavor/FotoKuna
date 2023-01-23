@@ -21,6 +21,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.text.NumberFormat
 import java.util.*
 import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 class MainActivity : AppCompatActivity() {
 
@@ -108,14 +109,14 @@ class MainActivity : AppCompatActivity() {
         val nf = NumberFormat.getInstance(Locale.getDefault())
 
         try {
-            kuna = (stringEuro.toFloat() * 7.53450).roundToInt()
+            kuna = ((nf.parse(stringEuro).toDouble() * 7.53450).toInt())
             return "$kuna KN"
         } catch (e: Exception) {
             //kuna = greska.parse("155,70").toDouble().roundToInt()
             //return kuna.toString()
 
             //return nf.parse("488,89").toString()
-            return stringEuro.replace("","-")
+            return "pogreška u konverziji\npokušaj ponovno"
         }
     }
 
