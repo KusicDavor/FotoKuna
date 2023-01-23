@@ -21,8 +21,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
-import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        supportActionBar?.hide()
 
         requestforPermission()
 
@@ -102,6 +101,16 @@ class MainActivity : AppCompatActivity() {
     private fun postoji(kunski_iznos : String) {
         if (iznosEuro != "" && tv_result.text == "SKENIRAM") {
             tv_result.text = iznosEuro + "€" + "\n" + kunski_iznos
+            pokazi_klik(true)
+        }
+    }
+
+    private fun pokazi_klik(b: Boolean) {
+        if (b) {
+            klik.visibility = View.VISIBLE
+        }
+        else {
+            klik.visibility = View.INVISIBLE
         }
     }
 
@@ -185,6 +194,7 @@ class MainActivity : AppCompatActivity() {
         tv_result.post{
             postoji == false
             tv_result.text = "SKENIRAM"
+            pokazi_klik(false)
         }
     }
 }
