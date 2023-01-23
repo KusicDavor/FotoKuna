@@ -18,10 +18,9 @@ import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.text.TextBlock
 import com.google.android.gms.vision.text.TextRecognizer
 import kotlinx.android.synthetic.main.activity_main.*
+import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
-import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,9 +34,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (supportActionBar != null) {
-            supportActionBar!!.hide()
-        }
+        supportActionBar?.hide()
 
         requestforPermission()
 
@@ -104,24 +101,34 @@ class MainActivity : AppCompatActivity() {
     private fun postoji(kunski_iznos : String) {
         if (iznosEuro != "" && tv_result.text == "SKENIRAM") {
             tv_result.text = iznosEuro + "€" + "\n" + kunski_iznos
+            pokazi_klik(true)
+        }
+    }
+
+    private fun pokazi_klik(b: Boolean) {
+        if (b) {
+            klik.visibility = View.VISIBLE
+        }
+        else {
+            klik.visibility = View.INVISIBLE
         }
     }
 
     private fun pretvoriUKunu(stringEuro: String): String {
         var kuna : Int
         val nf = NumberFormat.getInstance(Locale.getDefault())
-
+        val dec = DecimalFormat("#,###.##")
         try {
             kuna = ((nf.parse(stringEuro).toDouble() * 7.53450).toInt())
-            return "$kuna KN"
+            return dec.format(kuna) + " KN"
         } catch (e: Exception) {
-            return "pogreška u konverziji\npokušaj ponovno"
+            return "pogreška u konverziji"
         }
     }
 
     private fun prepoznajEure(items: SparseArray<TextBlock>): String {
-        var string: String = ""
-        var ca: CharArray = charArrayOf()
+        var string = ""
+        var ca: CharArray
         for (i in 0 until items.size()) {
             val item = items.valueAt(i).value
             if (item.contains("€") || item.contains("EUR")) {
@@ -187,6 +194,7 @@ class MainActivity : AppCompatActivity() {
         tv_result.post{
             postoji == false
             tv_result.text = "SKENIRAM"
+            pokazi_klik(false)
         }
     }
 }
