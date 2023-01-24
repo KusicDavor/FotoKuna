@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         requestforPermission()
+        requestforPermission()
 
         textRecognizer = TextRecognizer.Builder(this).build()
         if (!textRecognizer.isOperational) {
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             .setFacing(CameraSource.CAMERA_FACING_BACK)
             .setRequestedPreviewSize(1280, 1024)
             .setAutoFocusEnabled(true)
-            .setRequestedFps(2.0f)
+            .setRequestedFps(60f)
             .build()
 
         surface_camera_preview.holder.addCallback(object : SurfaceHolder.Callback {
@@ -100,7 +101,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun postoji(kunski_iznos : String) {
         if (iznosEuro != "" && tv_result.text == "SKENIRAM") {
-            tv_result.text = iznosEuro + "€" + "\n" + kunski_iznos
+            tv_result.text = iznosEuro + " €" + "\n" + kunski_iznos
             pokazi_klik(true)
         }
     }
@@ -122,7 +123,7 @@ class MainActivity : AppCompatActivity() {
             kuna = ((nf.parse(stringEuro).toDouble() * 7.53450).toInt())
             return dec.format(kuna) + " KN"
         } catch (e: Exception) {
-            return "pogreška u konverziji"
+            return "pogreška"
         }
     }
 
