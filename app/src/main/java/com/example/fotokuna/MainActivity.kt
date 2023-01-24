@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         requestforPermission()
+        requestforPermission()
 
         textRecognizer = TextRecognizer.Builder(this).build()
         if (!textRecognizer.isOperational) {
